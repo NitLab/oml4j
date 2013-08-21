@@ -482,11 +482,7 @@ public class OMLBase {
 			} else if(e instanceof ConnectException && e.getMessage().contains("Connection refused")){
 				System.out.println("Connection is refused, the service on the server is probably down.", e);
 			} else {
-<<<<<<< HEAD
 				e.printStackTrace();
-=======
-				//e.printStackTrace();
->>>>>>> 3c96e6a4069ff0e8dcec9d6111cd27dceb39e1fc
 				System.out.println("Could not connect");
 			}
 			return -1;
