@@ -1,5 +1,5 @@
 # OML4J: Native OML Implemantation in Java #
-This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the [oml text protocol3][http://oml.mytestbed.net/projects/oml/wiki/OML_Measurement_Stream_Protocol_(OMSP)_Specification].User can use this library to create Java applications which can send measurements to the OML collection server. A simple example, both on Android and on Native Java, on how to use this library is attached below.
+This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the [oml text protocol3][1].User can use this library to create Java applications which can send measurements to the OML collection server. A simple example, both on Android and on Native Java, on how to use this library is attached below.
 
 ## Usage-Real Example ##
 ### Android ###
@@ -166,51 +166,54 @@ Remember to change the package name. It must match you application's package nam
     package="com.ioigoume.webnitlabdatabase"
     android:versionCode="1"
     android:versionName="1.0" >
- 
+     
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="15" />
- 
+    android:minSdkVersion="8"
+    android:targetSdkVersion="15" />
+     
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
- 
+     
     <application
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
- 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    android:icon="@drawable/ic_launcher"
+    android:label="@string/app_name"
+    android:theme="@style/AppTheme" >
+    <activity
+    android:name=".MainActivity"
+    android:label="@string/title_activity_main" >
+    <intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+     
+    <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+    </activity>
     </application>
- 
-</manifest>
+     
+    </manifest>
 
 ### Java ###
     public class TestApp {
- 
+     
     public static void main(String[] args) {
-         OMLBase omlclient = new OMLBase("TestApp", "ioigoume-exp", "testapp", "tcp:nilab.inf.uth.gr:3003");
-         omlclient.addmp("tbl1", "counter:int32 name:string surname:string");
-         omlclient.addmp("tbl2", "val1:int32 val2:int32");
-         omlclient.start();
-         String[] data = { "1", "Ioannis", "Igoumenos" };
-         String [] data2 = { "3", "5"};
-         omlclient.inject("tbl1", data);
-         omlclient.inject("tbl2", data2);
-         data[0] = "2";
-         data[1] = "Ioannis";
-         data[2] =  "Igoumenos" ;
-         data2[0] = "5" ;
-         data2[1] = "99" ;
-         omlclient.inject("tbl1", data);
-         omlclient.inject("tbl2", data2);
-         omlclient.close();
+     OMLBase omlclient = new OMLBase("TestApp", "ioigoume-exp", "testapp", "tcp:nilab.inf.uth.gr:3003");
+     omlclient.addmp("tbl1", "counter:int32 name:string surname:string");
+     omlclient.addmp("tbl2", "val1:int32 val2:int32");
+     omlclient.start();
+     String[] data = { "1", "Ioannis", "Igoumenos" };
+     String [] data2 = { "3", "5"};
+     omlclient.inject("tbl1", data);
+     omlclient.inject("tbl2", data2);
+     data[0] = "2";
+     data[1] = "Ioannis";
+     data[2] =  "Igoumenos" ;
+     data2[0] = "5" ;
+     data2[1] = "99" ;
+     omlclient.inject("tbl1", data);
+     omlclient.inject("tbl2", data2);
+     omlclient.close();
     }
- 
-}
+     
+    }
+
+
+[1]: http://oml.mytestbed.net/projects/oml/wiki/OML_Measurement_Stream_Protocol_(OMSP)_Specification
