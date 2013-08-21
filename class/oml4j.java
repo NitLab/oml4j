@@ -428,11 +428,7 @@ public class OMLBase {
 			return false;
  
 		if (!server[0].toLowerCase().equals("tcp")) {
-<<<<<<< HEAD
 			System.out.println("No tcp tag in url.");
-=======
-			System.out.println.w(TAG,"No tcp tag in url.");
->>>>>>> 3c96e6a4069ff0e8dcec9d6111cd27dceb39e1fc
 			return false;
 		}
 		
