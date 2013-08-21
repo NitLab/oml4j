@@ -1,7 +1,7 @@
 # OML4J: Native OML Implemantation in Java #
 
 ----------
-This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the text protocol3 [http://oml.mytestbed.net/projects/oml/wiki/OML_Measurement_Stream_Protocol_(OMSP)_Specification](http://oml.mytestbed.net/projects/oml/wiki/OML_Measurement_Stream_Protocol_(OMSP)_Specification "oml-text").User can use this library to create Java applications which can send measurements to the OML collection server. A simple example, both on Android and on Native Java, on how to use this library is attached below.
+This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the text protocol3 ["oml-text"](http://oml.mytestbed.net/projects/oml/wiki/OML_Measurement_Stream_Protocol_(OMSP)_Specification).User can use this library to create Java applications which can send measurements to the OML collection server. A simple example, both on Android and on Native Java, on how to use this library is attached below.
 
 ## Usage-Real Example ##
 ### Android ###
