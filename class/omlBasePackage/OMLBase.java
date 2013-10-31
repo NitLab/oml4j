@@ -1,3 +1,4 @@
+package omlBasePackage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
@@ -169,13 +170,13 @@ public class OMLBase {
 			out.print(msg.toString());
 			mysock.getOutputStream().flush();
 			out.flush();
-			System.out.println("Tuple injected.");
+			System.out.println(TAG +": Tuple injected.");
 		} catch (IOException ioException) {
-			System.out.println("I could not connect");
+			System.out.println(TAG + ": I could not connect");
 			srvDisconnect();
 			return false;
 		} catch (NullPointerException e) {
-			System.out.println("Null Pointer Exception");
+			System.out.println(TAG + ": Null Pointer Exception");
 			return false;
 		}
 		return true;
@@ -195,7 +196,7 @@ public class OMLBase {
 		for(String[] tuple : data){
 			if(!create_tuples(table_name,tuple,msg))
 				return false;
-			System.out.println("tuple:" + msg.toString());
+			System.out.println(TAG + ":tuple:" + msg.toString());
 			/**
 			 * TRY SEND TO SERVER
 			 */
@@ -204,17 +205,17 @@ public class OMLBase {
 				mysock.getOutputStream().flush();
 				out.flush();
 				msg.delete(0, msg.length());
-				System.out.println("Injected");
+				System.out.println(TAG + ":Injected");
 			} catch (IOException ioException) {
 				if (ioException instanceof SocketException && ioException.getMessage().contains("Permission denied")) {
-					System.out.println("You don't have internet permission", ioException);
+					System.out.println(TAG + ":You don't have internet permission:" + ioException);
 				}
 				srvDisconnect();
-				System.out.println("You could not connect.", ioException);
+				System.out.println(TAG + ":You could not connect:" + ioException);
 				return false;
 				
 			} catch (NullPointerException e) {
-				System.out.println("Null Pointer Exception");
+				System.out.println(TAG + ":Null Pointer Exception");
 				srvDisconnect();
 				return false;
 			}
@@ -262,19 +263,19 @@ public class OMLBase {
 		msg.append("\n");
  
 		try {
-			System.out.println("head:\n" + msg.toString());
+			System.out.println(TAG + ":head:\n" + msg.toString());
 			out.print(msg.toString());
 			mysock.getOutputStream().flush();
 			out.flush();
 		} catch (IOException ioException) {
 			if (ioException instanceof SocketException && ioException.getMessage().contains("Permission denied")) {
-				System.out.println("You don't have internet permission", ioException);
+				System.out.println(TAG + ":You don't have internet permission:" + ioException);
 			}
-			System.out.println("I could not connect.");
+			System.out.println(TAG + ":I could not connect.");
 			srvDisconnect();
 			return false;
 		} catch (NullPointerException e) {
-			System.out.println("Null Pointer Exception:inject head");
+			System.out.println(TAG + ":Null Pointer Exception:inject head");
 			return false;
 		}
 		return true;
@@ -417,7 +418,7 @@ public class OMLBase {
 			return false;
  
 		if (!server[0].toLowerCase().equals("tcp")) {
-			System.out.println("No tcp tag in url.");
+			System.out.println(TAG + ":No tcp tag in url.");
 			return false;
 		}
 		
@@ -441,8 +442,8 @@ public class OMLBase {
  
 		try {
 			// The address to connect to
-			System.out.println("Address:" + getAddress());
-			System.out.println("Port:" + String.valueOf(getPort()));
+			System.out.println(TAG + ":Address:" + getAddress());
+			System.out.println(TAG + ":Port:" + String.valueOf(getPort()));
 			addr = InetAddress.getByName(getAddress());
 			// The address plus the port
 			servAddress = new InetSocketAddress(addr, getPort());
@@ -455,24 +456,24 @@ public class OMLBase {
 			if (mysock.isConnected()) {
 				if(out == null){
 					out = new PrintWriter(mysock.getOutputStream(),true);
-					System.out.println("New socket and new streamer was created.");
+					System.out.println(TAG + ":New socket and new streamer was created.");
 				}
 			}
  
 		} catch (NullPointerException e) {
-			System.out.println("Null Pointer occured.");
+			System.out.println(TAG + ":Null Pointer occured.");
 			return -1;
 		} catch (UnknownHostException e) {
-			System.out.println("Server does not exist.");
+			System.out.println(TAG + ":Server does not exist.");
 			return -1;
 		} catch (IOException e) {
 			if (e instanceof SocketException && e.getMessage().contains("Permission denied")) {
-				System.out.println("You don't have internet permission", e);
+				System.out.println(TAG + ":You don't have internet permission:" + e);
 			} else if(e instanceof ConnectException && e.getMessage().contains("Connection refused")){
-				System.out.println("Connection is refused, the service on the server is probably down.", e);
+				System.out.println(TAG + ":Connection is refused, the service on the server is probably down:" + e);
 			} else {
 				e.printStackTrace();
-				System.out.println("Could not connect");
+				System.out.println(TAG + ":Could not connect");
 			}
 			return -1;
 		}

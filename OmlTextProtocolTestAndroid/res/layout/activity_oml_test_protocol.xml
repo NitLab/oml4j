@@ -1,0 +1,23 @@
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+ 
+    <TextView
+        android:id="@+id/textView_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|fill_horizontal"
+        android:layout_marginRight="37dp"
+        android:layout_weight="1" />
+ 
+    <Button
+        android:id="@+id/btn_connect"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="@string/btn_OmlTest" />
+ 
+ 
+</LinearLayout>
