@@ -66,3 +66,8 @@ At the end of your program, call close to gracefully close the database:
 
 
     omlclient.close();
+
+
+## Examples ##
+
+You can find a native java and an android example inside the repository. The first one uses the jar approach and the second one the package approach in loading the OMLBase class.
