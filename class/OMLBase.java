@@ -11,18 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class OMLBase {
-	/**
-	 * The default maximum backoff exponent.
-	 */
-	static final int DEFAULT_MAXIMUM_BACKOFF_EXPONENT = 12;
-
-	/**
-	 * The default maximum number of tries to send a report. This value results in a retry
-	 * time of about 8 hours with an unchanged retry count.
-	 */
-	static final int DEFAULT_MAXIMUM_RETRY_COUNT = DEFAULT_MAXIMUM_BACKOFF_EXPONENT + 5;
-	
+public class OMLBase {	
 	private static final String TAG = "OMLBase";
 	private String oml_exp_id;
 	private String oml_name;
