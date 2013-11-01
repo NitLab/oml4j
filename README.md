@@ -1,5 +1,5 @@
 # OML4J: Native OML Implemantation in Java #
-This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the oml text protocol. User can use this library to create Java applications which can send measurements to the OML collection server. A usage description of the OML implementation and two develpment examples are attached below. 
+This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the oml text protocol. User can use this library to create Java applications which can send measurements to the OML collection server. A usage description of the OML implementation and two examples are attached below. 
 
 ## Usage ##
 
