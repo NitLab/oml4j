@@ -5,7 +5,7 @@ This is a simple client for OML which does not use liboml2 and its filters, but 
 
 This module provides the OMLBase class, which contains the following methods:
 
-- init
+- init 
 - start
 - addmp
 - inject
@@ -26,7 +26,7 @@ Then add the package to your project:
 
     import omlBasePackage.OMLBase;
 
-Start by initializing an OMLBase object. The init method takes up to four arguments:
+Start by initializing an OMLBase object. The init method, in our case the object's constructor, takes up to four arguments:
 
 - the name of the application,
 - the name of the experiment,
@@ -39,10 +39,17 @@ For example:
 
 The only mandatory argument is the first one (the name of the application). If you skip any of the others, they may be defined by environment variables (OML_DOMAIN, OML_NAME, OML_COLLECT) or via command-line options. If these variables are not passed in explicitly and neither the command line options nor environment variables are defined then the application will run with OML disabled, and the measurements that would have been sent to OML will be printed on stdout instead.
 
-Next, add one or more measurement points. Pass the name of the measurement point and a schema string to the start method. The schema string should be in the format measurement_name1:measurement_type1 measurement_name2:measurement_type2 for example:
+Next, add one or more measurement points. Create a two dimentional String array containing your preferred variables and their types. Use the array as a parameter for addmp function. For example:
 
-    omlclient.addmp("tbl1", "counter:int32 name:string surname:string"); 
-    omlclient.addmp("tbl2", "val1:int32 val2:int32");
+    String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
+    					{"name", "OML_STRING_VALUE"},
+    					{"surname", "OML_STRING_VALUE"} };
+
+	String[][] mp_2 = {	{"val1", "OML_INT32_VALUE"},
+						{"val2", "OML_INT32_VALUE"}};
+
+    omlclient.addmp("tbl1", mp_1); 
+    omlclient.addmp("tbl2", mp_2);
 
 
 

@@ -62,14 +62,28 @@ public class OmlTestProtocol extends Activity {
 	
 		    @Override
 		    public void onClick(View v) {
+		    	String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
+									{"name", "OML_STRING_VALUE"},
+									{"surname", "OML_STRING_VALUE"} };
+	
+				String[][] mp_2 = {	{"counter","OML_INT32_VALUE"},
+									{"name", "OML_STRING_VALUE"},
+									{"surname", "OML_STRING_VALUE"},
+									{"other", "OML_INT32_VALUE"}};
+				
+				String[][] mp_3 = {	{"counter", "OML_INT32_VALUE"},
+									{"name", "OML_STRING_VALUE"},
+									{"surname", "OML_STRING_VALUE"},
+									{"other", "OML_INT32_VALUE"},
+									{"other2", "OML_INT32_VALUE"}};
 		    	
 		    	// Create the object
 		    	omlclient = new OMLBase("TestAndroidApp", "AndroidTest-exp2", "ioigoume_testapp", "tcp:nitlab.inf.uth.gr:3003");
 		    	text.setText("oml client created\n");
 		    	// Add schema
-		    	omlclient.addmp(table_name, "counter:int32 name:string surname:string");
-		    	omlclient.addmp(table_name_2, "counter:int32 name:string surname:string other:int32");
-		    	omlclient.addmp(table_name_3, "counter:int32 name:string surname:string other:int32 other2:int32");
+		    	omlclient.addmp(table_name, mp_1);
+		    	omlclient.addmp(table_name_2, mp_2);
+		    	omlclient.addmp(table_name_3, mp_3);
 	
 		    	text.append("oml schema created\n");
 		    	
@@ -77,7 +91,7 @@ public class OmlTestProtocol extends Activity {
 		    	omlclient.start();
 				text.append("oml client is connected\n");
 				
-				if (omlclient != null && omlclient.isSrvConnected()) {
+				if (omlclient != null ) {
 				   try {
 					counter++;
 					String[] data = { String.valueOf(counter), "Giannis", "Igoumenos" };

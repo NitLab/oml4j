@@ -26,14 +26,21 @@ package mainPackage;
 import omlBasePackage.OMLBase;
 
 public class Main {
-
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
+							{"name", "OML_STRING_VALUE"},
+							{"surname", "OML_STRING_VALUE"} };
+		
+		String[][] mp_2 = {	{"val1", "OML_INT32_VALUE"},
+							{"val2", "OML_INT32_VALUE"}};
+		
 		OMLBase omlclient = new OMLBase("TestApp", "ioigoume-exp", "testapp", "tcp:nitlab.inf.uth.gr:3003");
-        omlclient.addmp("tbl1", "counter:int32 name:string surname:string");
-        omlclient.addmp("tbl2", "val1:int32 val2:int32");
+        omlclient.addmp("tbl1", mp_1);
+        omlclient.addmp("tbl2", mp_2);
         omlclient.start();
         String[] data = { "1", "Ioannis", "Igoumenos" };
         String [] data2 = { "3", "5"};

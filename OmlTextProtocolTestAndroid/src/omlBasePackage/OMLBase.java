@@ -155,22 +155,30 @@ public class OMLBase {
 	 *
 	 * ADD TABLE AND SCHEMA FOR THAT TABLE
 	 * @param table_name: String - Name of the table to be added in the database
-	 * @param variable_seq : String - Columns of the table, syntax and grammatic according to OML TEXT Protocol
+	 * @param variable_seq : String[][] - Variables and types of the schema. Proper structure 
+	    is :     mp_1 = {	{"counter","OML_INT32_VALUE"},
+							{"name", "OML_STRING_VALUE"},
+							{"surname", "OML_STRING_VALUE"} };
 	 */
-	public synchronized void addmp(String table_name, String variable_seq) {
-		schemaPart.append(	"schema: " + 
-							String.valueOf(schema_counter) + // #2 : stream_id
-							" " + 
-							table_name + // #3 : table name 
-							" " + 
-							variable_seq + //#4 : data
-							"\n" );
+	public synchronized void addmp(String table_name, String[][] mp) {
+		String variable_seq = "";
+		for(String[] str_a : mp){
+			String type = str_a[1].substring(str_a[1].indexOf('_')+1 ,str_a[1].lastIndexOf('_'));
+			variable_seq = variable_seq + str_a[0] + ":" + type.toLowerCase() + " ";
+		}
+		variable_seq = variable_seq.trim();
 		
+		schemaPart.append(	"schema: " + 
+			String.valueOf(schema_counter) + // #2 : stream_id
+			" " + 
+			table_name + // #3 : table name 
+			" " + 
+			variable_seq + //#4 : data
+			"\n" );
 		schemaCounter.put(table_name, schema_counter);
 		schema_counter++;
 		// track the measurement schemas
 		measurementPointCounter.put(table_name, 0);
- 
 	}
 	
 	/**
@@ -255,7 +263,7 @@ public class OMLBase {
 	/**
 	 * JUST CREATE THE HEADER
 	 */
-	public synchronized void create_head(){
+	private synchronized void create_head(){
 		// Take current time
 		head_time = System.currentTimeMillis();
 		float lcl_head_time = head_time/1000L;
@@ -326,7 +334,7 @@ public class OMLBase {
 	 *
 	 * CREATE TUPLE
 	 */
-	public synchronized boolean create_tuples(String table_name, String[] data, StringBuilder tuples){
+	private synchronized boolean create_tuples(String table_name, String[] data, StringBuilder tuples){
 		int seq_no = 0;
 		int schema_id = 0;
 		
@@ -384,35 +392,35 @@ public class OMLBase {
 	//////////////////////////////////////////////////////////////////////
 	
 	
-	public synchronized boolean isHeaderPushed() {
+	protected synchronized boolean isHeaderPushed() {
 		return headerPushed;
 	}
 	
-	public synchronized void setHeaderPushed(boolean headerPushed) {
+	protected synchronized void setHeaderPushed(boolean headerPushed) {
 		this.headerPushed = headerPushed;
 	}
 	
-	public synchronized String getHeader(){
+	protected synchronized String getHeader(){
 		return header.toString();
 	}
 	
-	public synchronized String getSchema(){
+	protected synchronized String getSchema(){
 		return schemaPart.toString();
 	}
  
-	public synchronized String getOml_exp_id() {
+	protected synchronized String getOml_exp_id() {
 		return oml_exp_id;
 	}
  
-	public synchronized String getOml_name() {
+	protected synchronized String getOml_name() {
 		return oml_name;
 	}
  
-	public synchronized String getOml_server() {
+	protected synchronized String getOml_server() {
 		return oml_server;
 	}
  
-	public synchronized int getPort() {
+	protected synchronized int getPort() {
 		return port;
 	}
  
@@ -420,7 +428,7 @@ public class OMLBase {
 		this.port = port;
 	}
  
-	public synchronized String getAddress() {
+	protected synchronized String getAddress() {
 		return address;
 	}
  
@@ -428,7 +436,7 @@ public class OMLBase {
 		this.address = address;
 	}
  
-	public int getSchemaCounter() {
+	protected int getSchemaCounter() {
 		return schema_counter;
 	}
  
@@ -532,7 +540,7 @@ public class OMLBase {
 	 * @return false: socket is not connected
 	 * 
 	 */
-	public synchronized boolean isSrvConnected() {
+	protected synchronized boolean isSrvConnected() {
 		boolean isConnected = false;
 		try {
 			isConnected = !mysock.isClosed();
@@ -546,7 +554,7 @@ public class OMLBase {
 	 * Test if the Socket is open
 	 * @return true : if the socket is open
 	 */
-	public synchronized boolean isSockOpen(){
+	protected synchronized boolean isSockOpen(){
 		try{
 			if(out.checkError()){
 				return false;
