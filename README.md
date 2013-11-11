@@ -39,17 +39,25 @@ For example:
 
 The only mandatory argument is the first one (the name of the application). If you skip any of the others, they may be defined by environment variables (OML_DOMAIN, OML_NAME, OML_COLLECT) or via command-line options. If these variables are not passed in explicitly and neither the command line options nor environment variables are defined then the application will run with OML disabled, and the measurements that would have been sent to OML will be printed on stdout instead.
 
-Next, add one or more measurement points. Create a two dimentional String array containing your preferred variables and their types. Use the array as a parameter for addmp function. For example:
+Next, add one or more measurement points. Foreach measurement point create the appropriate object. The object's constructor takes two parameters. The first one is the name of the variable and the second one is the type of the variable. The valid variable types are predefined in an ENUM structure. For example:
 
-    String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
-    					{"name", "OML_STRING_VALUE"},
-    					{"surname", "OML_STRING_VALUE"} };
+    OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
+    OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
+    OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
+	OMLMPFieldDef vt4 = new OMLMPFieldDef("val1",MPTYPES.OML_INT32_VALUE.getMtype());
+	OMLMPFieldDef vt5 = new OMLMPFieldDef("val2",MPTYPES.OML_INT32_VALUE.getMtype());
 
-	String[][] mp_2 = {	{"val1", "OML_INT32_VALUE"},
-						{"val2", "OML_INT32_VALUE"}};
 
-    omlclient.addmp("tbl1", mp_1); 
-    omlclient.addmp("tbl2", mp_2);
+Next, use the measurement points you created and make the schema objects you want.
+
+
+    OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
+	OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
+
+Each schema object can return the schema string according to the protocol version the user defines. Use this functionality and call the addmp function of the omlclient object to create the final schema structure. For example:
+
+    omlclient.addmp("tbl1", mp_1.retSchema(1)); 
+    omlclient.addmp("tbl2", mp_2.retSchema(1));
 
 
 

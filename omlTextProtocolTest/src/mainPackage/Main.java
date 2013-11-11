@@ -23,24 +23,33 @@
 
 package mainPackage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import omlBasePackage.MPTYPES;
 import omlBasePackage.OMLBase;
+import omlBasePackage.OMLMPFieldDef;
+import omlBasePackage.OMLSchemaCST;
 
 public class Main {
 	
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
-							{"name", "OML_STRING_VALUE"},
-							{"surname", "OML_STRING_VALUE"} };
-		
-		String[][] mp_2 = {	{"val1", "OML_INT32_VALUE"},
-							{"val2", "OML_INT32_VALUE"}};
-		
+	public static void main(String[] args) {		
 		OMLBase omlclient = new OMLBase("TestApp", "ioigoume-exp", "testapp", "tcp:nitlab.inf.uth.gr:3003");
-        omlclient.addmp("tbl1", mp_1);
-        omlclient.addmp("tbl2", mp_2);
+		
+		OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
+		OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
+		OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
+		OMLMPFieldDef vt4 = new OMLMPFieldDef("val1",MPTYPES.OML_INT32_VALUE.getMtype());
+		OMLMPFieldDef vt5 = new OMLMPFieldDef("val2",MPTYPES.OML_INT32_VALUE.getMtype());
+        
+		OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
+		OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
+		
+		omlclient.addmp("tbl1", mp_1.retSchema(1));
+        omlclient.addmp("tbl2", mp_2.retSchema(1));
         omlclient.start();
         String[] data = { "1", "Ioannis", "Igoumenos" };
         String [] data2 = { "3", "5"};

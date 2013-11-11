@@ -34,6 +34,8 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+
 
 public class OMLBase {	
 	private static final String TAG = "OMLBase";
@@ -44,7 +46,7 @@ public class OMLBase {
 	// Serial number of tuble for each table in the database
 	private HashMap<String, Integer> measurementPointCounter = new HashMap<String, Integer>();
 	// Serial number the schema has in the header
-	private HashMap<String, Integer> schemaCounter = new HashMap<String, Integer>();
+	private HashMap<String, Integer> schemaCounter = new HashMap<String, Integer>(); 
  
 	private StringBuilder schemaPart = new StringBuilder();
 	private StringBuilder header = new StringBuilder();
@@ -155,25 +157,15 @@ public class OMLBase {
 	 *
 	 * ADD TABLE AND SCHEMA FOR THAT TABLE
 	 * @param table_name: String - Name of the table to be added in the database
-	 * @param variable_seq : String[][] - Variables and types of the schema. Proper structure 
-	    is :     mp_1 = {	{"counter","OML_INT32_VALUE"},
-							{"name", "OML_STRING_VALUE"},
-							{"surname", "OML_STRING_VALUE"} };
+	 * @param mp : String - The schema 
 	 */
-	public synchronized void addmp(String table_name, String[][] mp) {
-		String variable_seq = "";
-		for(String[] str_a : mp){
-			String type = str_a[1].substring(str_a[1].indexOf('_')+1 ,str_a[1].lastIndexOf('_'));
-			variable_seq = variable_seq + str_a[0] + ":" + type.toLowerCase() + " ";
-		}
-		variable_seq = variable_seq.trim();
-		
+	public synchronized void addmp(String table_name, String mp) {
 		schemaPart.append(	"schema: " + 
 			String.valueOf(schema_counter) + // #2 : stream_id
 			" " + 
 			table_name + // #3 : table name 
 			" " + 
-			variable_seq + //#4 : data
+			mp + //#4 : data
 			"\n" );
 		schemaCounter.put(table_name, schema_counter);
 		schema_counter++;
@@ -440,6 +432,7 @@ public class OMLBase {
 		return schema_counter;
 	}
  
+	@SuppressLint("DefaultLocale")
 	private synchronized boolean connectToServer(String oml_server) {
 		if (oml_server == null)
 			return false;
@@ -515,7 +508,7 @@ public class OMLBase {
 	/**
 	 * Disconnect from server
 	 * @return 0 : Connection closed successfully
-	 * -1 - Connection was closed or could not be closed
+	 * -1 : Connection was closed or could not be closed
 	 */
 	private synchronized int srvDisconnect() {
 		if (mysock != null && mysock.isConnected()) {
@@ -563,5 +556,5 @@ public class OMLBase {
 			return false;
 		}
 		return true;
-	}
+	}	
 }

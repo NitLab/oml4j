@@ -23,7 +23,13 @@
 
 package com.ioigoume.omltextprotocoltestandroid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import omlBasePackage.MPTYPES;
 import omlBasePackage.OMLBase;
+import omlBasePackage.OMLMPFieldDef;
+import omlBasePackage.OMLSchemaCST;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -62,28 +68,26 @@ public class OmlTestProtocol extends Activity {
 	
 		    @Override
 		    public void onClick(View v) {
-		    	String[][] mp_1 = {	{"counter","OML_INT32_VALUE"},
-									{"name", "OML_STRING_VALUE"},
-									{"surname", "OML_STRING_VALUE"} };
-	
-				String[][] mp_2 = {	{"counter","OML_INT32_VALUE"},
-									{"name", "OML_STRING_VALUE"},
-									{"surname", "OML_STRING_VALUE"},
-									{"other", "OML_INT32_VALUE"}};
-				
-				String[][] mp_3 = {	{"counter", "OML_INT32_VALUE"},
-									{"name", "OML_STRING_VALUE"},
-									{"surname", "OML_STRING_VALUE"},
-									{"other", "OML_INT32_VALUE"},
-									{"other2", "OML_INT32_VALUE"}};
-		    	
+
 		    	// Create the object
 		    	omlclient = new OMLBase("TestAndroidApp", "AndroidTest-exp2", "ioigoume_testapp", "tcp:nitlab.inf.uth.gr:3003");
 		    	text.setText("oml client created\n");
+		    	
+				OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
+				OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
+				OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
+				OMLMPFieldDef vt4 = new OMLMPFieldDef("other",MPTYPES.OML_INT32_VALUE.getMtype());
+				OMLMPFieldDef vt5 = new OMLMPFieldDef("other2",MPTYPES.OML_INT32_VALUE.getMtype());
+		        
+				OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
+				OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3,vt4)));
+				OMLSchemaCST mp_3 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
+		    	
+		    	
 		    	// Add schema
-		    	omlclient.addmp(table_name, mp_1);
-		    	omlclient.addmp(table_name_2, mp_2);
-		    	omlclient.addmp(table_name_3, mp_3);
+		    	omlclient.addmp(table_name, mp_1.retSchema(1));
+		    	omlclient.addmp(table_name_2, mp_2.retSchema(1));
+		    	omlclient.addmp(table_name_3, mp_3.retSchema(1));
 	
 		    	text.append("oml schema created\n");
 		    	
@@ -96,8 +100,8 @@ public class OmlTestProtocol extends Activity {
 					counter++;
 					String[] data = { String.valueOf(counter), "Giannis", "Igoumenos" };
 					String[] data2 = { String.valueOf(counter), "Giannis", "Igoumenos", String.valueOf(counter*2) };
-					String[] data3 = { String.valueOf(counter), "Giannis", "Igoumenos", String.valueOf(counter*2), String.valueOf(counter + 2) };
-		
+					String[] data3 = { String.valueOf(counter*2), String.valueOf(counter + 2) };
+		 
 					omlclient.inject(table_name, data);
 					text.append("oml:" + data[0] + " " + data[1] + " " + data[2] + " - is added.\n");					
 					omlclient.inject(table_name_2, data2);
@@ -105,7 +109,7 @@ public class OmlTestProtocol extends Activity {
 					omlclient.inject(table_name_2, data2);
 					text.append("oml:" + data2[0] + " " + data2[1] + " " + data2[2] + " " + data2[3] + " - is added.\n");
 					omlclient.inject(table_name_3, data3);
-					text.append("oml:" + data3[0] + " " + data3[1] + " " + data3[2] + " " + data3[3] + " " + data3[4] + " - is added.\n");
+					text.append("oml:" + data3[0] + " " + data3[1] + " " + " - is added.\n");
 						
 					// Close the database connection
 					omlclient.close();
