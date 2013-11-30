@@ -258,7 +258,7 @@ public class OMLBase {
 	private synchronized void create_head(){
 		// Take current time
 		head_time = System.currentTimeMillis();
-		float lcl_head_time = head_time/1000L;
+		int lcl_head_time = (int)(head_time/1000L);
 		String time = String.valueOf(lcl_head_time);
 		 
 		header.append("protocol: 1\n");
