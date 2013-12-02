@@ -34,8 +34,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
-import android.annotation.SuppressLint;
-
 
 public class OMLBase {	
 	private static final String TAG = "OMLBase";
@@ -56,6 +54,7 @@ public class OMLBase {
 	private String address;
 	// The timestamp in secs
 	private volatile long head_time;
+
 	// schema counter
 	private int schema_counter;
  
@@ -96,7 +95,7 @@ public class OMLBase {
 		this.oml_server = oml_server;
 		this.oml_app_name = oml_app_name;
  
-		schema_counter = 1;
+		schema_counter = 0;
 		port = 0;
 		address = "none";
 		setHeaderPushed(false);
@@ -159,7 +158,9 @@ public class OMLBase {
 	 * @param table_name: String - Name of the table to be added in the database
 	 * @param mp : String - The schema 
 	 */
+	@Deprecated
 	public synchronized void addmp(String table_name, String mp) {
+		schema_counter++;
 		schemaPart.append(	"schema: " + 
 			String.valueOf(schema_counter) + // #2 : stream_id
 			" " + 
@@ -168,9 +169,46 @@ public class OMLBase {
 			mp + //#4 : data
 			"\n" );
 		schemaCounter.put(table_name, schema_counter);
-		schema_counter++;
 		// track the measurement schemas
 		measurementPointCounter.put(table_name, 0);
+	}
+	
+	/**
+	 * SCHEMA DESCRIPTION
+	 * The description of the schema used in each measurement stream is:
+	 * a space-delimited concatenation of the following elements:
+	 * 
+	 *  - schema id
+	 *  - name of the schema/ table
+	 *  - a sequence of name, type pairs, one for each element. 
+	 *    The name and type in each pair are separated by a ':'
+	 *  
+	 * Each client should number its measurement streams contiguously 
+	 * starting from 1.
+	 *
+	 * Add table and schema for the current object
+	 * @param table_name : the table in which you will add the schema
+	 * @param mp_ob : the object that holds the measurement points that will create the schema
+	 */
+	public synchronized void addmp(String table_name, OmlMP mp_ob) {
+		schema_counter++;
+		/**
+		 * Initialize the OmlMP variables
+		 */
+		mp_ob.setOmlClientSwallowCopy(this);
+		mp_ob.setTable_name(table_name);
+		mp_ob.setSchemaCounter(schema_counter);
+		
+		String mp = mp_ob.retSchema(1);
+		/**
+		 * Create the description of the table(schema)
+		 */
+		String schemaDescription = 	"schema: " + String.valueOf(schema_counter) + // #2 : stream_id
+									" " + table_name + // #3 : table name 
+									" " + mp + //#4 : data
+									"\n";
+		mp_ob.setSchemaDescription(schemaDescription);
+		schemaPart.append(schemaDescription);
 	}
 	
 	/**
@@ -179,6 +217,7 @@ public class OMLBase {
 	 * @param data
 	 * @return boolean status
 	 */
+	@Deprecated
 	public synchronized boolean inject(String table_name, String[] data){
 		StringBuilder msg = new StringBuilder();
 		// Create the tuples from the inputs 
@@ -207,11 +246,38 @@ public class OMLBase {
 	
 	
 	/**
+	 * SENDS SINGLE LINE TUPLE TO THE SERVER
+	 * @param message to write on the opened socket
+	 * @return boolean status
+	 */
+	public synchronized boolean write_to_sock(StringBuilder msg){
+		/**
+		 * TRY SEND TO SERVER
+		 */
+		try {
+			out.print(msg.toString());
+			mysock.getOutputStream().flush();
+			out.flush();
+			System.out.println(TAG +": Tuple injected.");
+		} catch (IOException ioException) {
+			System.out.println(TAG + ": I could not connect");
+			srvDisconnect();
+			return false;
+		} catch (NullPointerException e) {
+			System.out.println(TAG + ": Null Pointer Exception");
+			return false;
+		}
+		return true;
+	}
+	
+	
+	/**
 	 * SENDS MULTIPLE TUPLES TO THE SERVER
 	 * @param table_name
 	 * @param data
 	 * @return boolean status
 	 */
+	@Deprecated
 	public synchronized boolean inject_mass(String table_name, List<String[]> data){
 		StringBuilder msg = new StringBuilder();
 		// Create the tuples from the inputs 
@@ -258,8 +324,8 @@ public class OMLBase {
 	private synchronized void create_head(){
 		// Take current time
 		head_time = System.currentTimeMillis();
-		float lcl_head_time = head_time/1000L;
-		String time = String.valueOf(lcl_head_time);
+		double lcl_head_time = head_time/1000.0;
+		String time = Double.toString(lcl_head_time);
 		 
 		header.append("protocol: 1\n");
 		header.append("experiment-id: " + oml_exp_id + "\n");
@@ -355,8 +421,8 @@ public class OMLBase {
 		 */
 		long cur_time = System.currentTimeMillis();
 		long dif_time = cur_time - head_time;
-		float lcl_dif_time = dif_time/1000L;
-		String dif_time_str = String.valueOf(lcl_dif_time);
+		double lcl_dif_time = dif_time/1000.0;
+		String dif_time_str = Double.toString(lcl_dif_time);
  
 		/**
 		 * CREATE THE TUPLE STRING
@@ -419,6 +485,15 @@ public class OMLBase {
 	private synchronized void setPort(int port) {
 		this.port = port;
 	}
+	
+	public synchronized long getHead_time() {
+		return head_time;
+	}
+
+	@SuppressWarnings("unused")
+	private synchronized void setHead_time(long head_time) {
+		this.head_time = head_time;
+	}
  
 	protected synchronized String getAddress() {
 		return address;
@@ -432,7 +507,6 @@ public class OMLBase {
 		return schema_counter;
 	}
  
-	@SuppressLint("DefaultLocale")
 	private synchronized boolean connectToServer(String oml_server) {
 		if (oml_server == null)
 			return false;

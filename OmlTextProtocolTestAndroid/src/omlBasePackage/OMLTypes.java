@@ -23,7 +23,7 @@
 
 package omlBasePackage;
 
-public enum MPTYPES
+public enum OMLTypes
 {
 	OML_DOUBLE_VALUE("double"),
 	OML_LONG_VALUE("long"),
@@ -39,14 +39,45 @@ public enum MPTYPES
 	
 	private String mtype;
 	
-	private MPTYPES(String s){
+	private OMLTypes(String s){
 		mtype = s;
 	}
 	
-	public String getMtype()
+	public String getOMLTypes()
 	{
 		return mtype;
 	}
 	
+	@Override
+	public String toString() {
+	     switch (this) {
+	       case OML_DOUBLE_VALUE:
+	            System.out.println(mtype);
+	            break;
+	       case OML_LONG_VALUE:
+	            System.out.println(mtype);
+	            break;
+	       case OML_PADDING1_VALUE:
+	            System.out.println(mtype);
+	            break;
+	       case OML_STRING_VALUE:
+	            System.out.println(mtype);
+	       case OML_INT32_VALUE:
+	            System.out.println(mtype);
+	       case OML_UINT32_VALUE:
+	            System.out.println(mtype);
+	       case OML_INT64_VALUE:
+	            System.out.println(mtype);
+	       case OML_BLOB_VALUE:
+	            System.out.println(mtype);
+	       case OML_UINT64_VALUE:
+	            System.out.println(mtype);
+	       case OML_GUID_VALUE:
+	            System.out.println(mtype);
+	       case OML_BOOL_VALUE:
+	            System.out.println(mtype);
+	      }
+	      return super.toString();
+	}
 	
 }

@@ -28,6 +28,13 @@ public class OMLMPFieldDef
 	private String mpname;
 	private String mptype;
 	
+	public OMLMPFieldDef(String mpname, OMLTypes mptype)
+	{
+		setMpname(mpname);
+		setMptype(mptype.getOMLTypes());
+	}
+	
+	@Deprecated
 	public OMLMPFieldDef(String mpname, String mptype)
 	{
 		setMpname(mpname);

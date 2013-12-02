@@ -24,12 +24,11 @@
 package mainPackage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import omlBasePackage.MPTYPES;
 import omlBasePackage.OMLBase;
 import omlBasePackage.OMLMPFieldDef;
-import omlBasePackage.OMLSchemaCST;
+import omlBasePackage.OMLTypes;
+import omlBasePackage.OmlMP;
 
 public class Main {
 	
@@ -39,29 +38,32 @@ public class Main {
 	public static void main(String[] args) {		
 		OMLBase omlclient = new OMLBase("TestApp", "ioigoume-exp", "testapp", "tcp:nitlab.inf.uth.gr:3003");
 		
-		OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
-		OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
-		OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
-		OMLMPFieldDef vt4 = new OMLMPFieldDef("val1",MPTYPES.OML_INT32_VALUE.getMtype());
-		OMLMPFieldDef vt5 = new OMLMPFieldDef("val2",MPTYPES.OML_INT32_VALUE.getMtype());
-        
-		OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
-		OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
+		ArrayList<OMLMPFieldDef> mp1 = new ArrayList<OMLMPFieldDef>();
+		mp1.add(new OMLMPFieldDef("counter",OMLTypes.OML_INT32_VALUE));
+		mp1.add(new OMLMPFieldDef("name",OMLTypes.OML_STRING_VALUE));
+		mp1.add(new OMLMPFieldDef("surname",OMLTypes.OML_STRING_VALUE));
 		
-		omlclient.addmp("tbl1", mp_1.retSchema(1));
-        omlclient.addmp("tbl2", mp_2.retSchema(1));
+		ArrayList<OMLMPFieldDef> mp2 = new ArrayList<OMLMPFieldDef>();
+		mp2.add(new OMLMPFieldDef("val1",OMLTypes.OML_INT32_VALUE));
+		mp2.add(new OMLMPFieldDef("val2",OMLTypes.OML_INT32_VALUE));
+		
+		OmlMP mp_1 = new OmlMP(mp1);
+		OmlMP mp_2 = new OmlMP(mp2);
+		
+		omlclient.addmp("tbl1", mp_1);
+        omlclient.addmp("tbl2", mp_2);
         omlclient.start();
         String[] data = { "1", "Ioannis", "Igoumenos" };
         String [] data2 = { "3", "5"};
-        omlclient.inject("tbl1", data);
-        omlclient.inject("tbl2", data2);
-        data[0] = "2";
-        data[1] = "Igoumenos";
-        data[2] =  "Ioannis" ;
-        data2[0] = "5" ;
-        data2[1] = "99" ;
-        omlclient.inject("tbl1", data);
-        omlclient.inject("tbl2", data2);
+        for(int i=0; i<10 ; i++){
+	        mp_1.inject(data);
+	        mp_2.inject(data2);
+	        data[0] += "2";
+	        data[1] = "Igoumenos";
+	        data[2] =  "Ioannis" ;
+	        data2[0] = "5" ;
+	        data2[1] = "99" ;
+        }
         omlclient.close();
 
 	}

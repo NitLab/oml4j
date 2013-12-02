@@ -24,12 +24,11 @@
 package com.ioigoume.omltextprotocoltestandroid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import omlBasePackage.MPTYPES;
 import omlBasePackage.OMLBase;
 import omlBasePackage.OMLMPFieldDef;
-import omlBasePackage.OMLSchemaCST;
+import omlBasePackage.OMLTypes;
+import omlBasePackage.OmlMP;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -42,7 +41,6 @@ public class OmlTestProtocol extends Activity {
 	
 	public static final String table_name = "dataTable";
 	public static final String table_name_2 = "data2Table";
-	public static final String table_name_3 = "data3Table";
  
 	private TextView text;
 	private Button btn_test;
@@ -70,24 +68,24 @@ public class OmlTestProtocol extends Activity {
 		    public void onClick(View v) {
 
 		    	// Create the object
-		    	omlclient = new OMLBase("TestAndroidApp", "AndroidTest-exp2", "ioigoume_testapp", "tcp:nitlab.inf.uth.gr:3003");
+		    	omlclient = new OMLBase("TestApp", "ioigoume-exp-android", "testapp", "tcp:nitlab.inf.uth.gr:3003");
 		    	text.setText("oml client created\n");
 		    	
-				OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
-				OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
-				OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
-				OMLMPFieldDef vt4 = new OMLMPFieldDef("other",MPTYPES.OML_INT32_VALUE.getMtype());
-				OMLMPFieldDef vt5 = new OMLMPFieldDef("other2",MPTYPES.OML_INT32_VALUE.getMtype());
-		        
-				OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
-				OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3,vt4)));
-				OMLSchemaCST mp_3 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
-		    	
+				ArrayList<OMLMPFieldDef> mp1 = new ArrayList<OMLMPFieldDef>();
+				mp1.add(new OMLMPFieldDef("counter",OMLTypes.OML_INT32_VALUE));
+				mp1.add(new OMLMPFieldDef("name",OMLTypes.OML_STRING_VALUE));
+				mp1.add(new OMLMPFieldDef("surname",OMLTypes.OML_STRING_VALUE));
+				
+				ArrayList<OMLMPFieldDef> mp2 = new ArrayList<OMLMPFieldDef>();
+				mp2.add(new OMLMPFieldDef("val1",OMLTypes.OML_INT32_VALUE));
+				mp2.add(new OMLMPFieldDef("val2",OMLTypes.OML_INT32_VALUE));
+				
+				OmlMP mp_1 = new OmlMP(mp1);
+				OmlMP mp_2 = new OmlMP(mp2);
 		    	
 		    	// Add schema
-		    	omlclient.addmp(table_name, mp_1.retSchema(1));
-		    	omlclient.addmp(table_name_2, mp_2.retSchema(1));
-		    	omlclient.addmp(table_name_3, mp_3.retSchema(1));
+		    	omlclient.addmp(table_name, mp_1);
+		    	omlclient.addmp(table_name_2, mp_2);
 	
 		    	text.append("oml schema created\n");
 		    	
@@ -99,17 +97,14 @@ public class OmlTestProtocol extends Activity {
 				   try {
 					counter++;
 					String[] data = { String.valueOf(counter), "Giannis", "Igoumenos" };
-					String[] data2 = { String.valueOf(counter), "Giannis", "Igoumenos", String.valueOf(counter*2) };
-					String[] data3 = { String.valueOf(counter*2), String.valueOf(counter + 2) };
+					String[] data2 = { String.valueOf(counter), String.valueOf(counter*2) };					
 		 
-					omlclient.inject(table_name, data);
+					mp_1.inject(data);
 					text.append("oml:" + data[0] + " " + data[1] + " " + data[2] + " - is added.\n");					
-					omlclient.inject(table_name_2, data2);
-					text.append("oml:" + data2[0] + " " + data2[1] + " " + data2[2] + " " + data2[3] + " - is added.\n");					
-					omlclient.inject(table_name_2, data2);
-					text.append("oml:" + data2[0] + " " + data2[1] + " " + data2[2] + " " + data2[3] + " - is added.\n");
-					omlclient.inject(table_name_3, data3);
-					text.append("oml:" + data3[0] + " " + data3[1] + " " + " - is added.\n");
+					mp_2.inject(data2);
+					text.append("oml:" + data2[0] + " " + data2[1] + " - is added.\n");					
+					mp_2.inject(data2);
+					text.append("oml:" + data2[0] + " " + data2[1] + " - is added.\n");
 						
 					// Close the database connection
 					omlclient.close();

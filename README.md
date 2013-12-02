@@ -1,4 +1,5 @@
 # OML4J: Native OML Implemantation in Java #
+### v 1.0.1 ###
 This is a simple client for OML which does not use liboml2 and its filters, but connects directly to the server using the oml text protocol. User can use this library to create Java applications which can send measurements to the OML collection server. A usage description of the OML implementation and two examples are attached below. 
 
 ## Usage ##
@@ -41,27 +42,30 @@ The only mandatory argument is the first one (the name of the application). If y
 
 Next, add one or more measurement points. Foreach measurement point create the appropriate object. The object's constructor takes two parameters. The first one is the name of the variable and the second one is the type of the variable. The valid variable types are predefined in an ENUM structure. For example:
 
-    OMLMPFieldDef vt1 = new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE.getMtype());
-    OMLMPFieldDef vt2 = new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE.getMtype());
-    OMLMPFieldDef vt3 = new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE.getMtype());
-	OMLMPFieldDef vt4 = new OMLMPFieldDef("val1",MPTYPES.OML_INT32_VALUE.getMtype());
-	OMLMPFieldDef vt5 = new OMLMPFieldDef("val2",MPTYPES.OML_INT32_VALUE.getMtype());
+    ArrayList<OMLMPFieldDef> mp1 = new ArrayList<OMLMPFieldDef>();
+	mp1.add(new OMLMPFieldDef("counter",MPTYPES.OML_INT32_VALUE));
+    mp1.add(new OMLMPFieldDef("name",MPTYPES.OML_STRING_VALUE));
+    mp1.add(new OMLMPFieldDef("surname",MPTYPES.OML_STRING_VALUE));
+	
+	ArrayList<OMLMPFieldDef> mp2 = new ArrayList<OMLMPFieldDef>();
+	mp2.add(new OMLMPFieldDef("val1",MPTYPES.OML_INT32_VALUE));
+	mp2.add(new OMLMPFieldDef("val2",MPTYPES.OML_INT32_VALUE));
 
 
 Next, use the measurement points you created and make the schema objects you want.
 
 
-    OMLSchemaCST mp_1 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt1,vt2,vt3)));
-	OMLSchemaCST mp_2 = new OMLSchemaCST(new ArrayList<OMLMPFieldDef>(Arrays.asList(vt4,vt5)));
+    OmlMP mp_1 = new OmlMP(mp1);
+	OmlMP mp_2 = new OmlMP(mp2);
 
-Each schema object can return the schema string according to the protocol version the user defines. Use this functionality and call the addmp function of the omlclient object to create the final schema structure. For example:
+Call the addmp function of the omlclient object to create the final schema structure according to third protocol version. For example:
 
-    omlclient.addmp("tbl1", mp_1.retSchema(1)); 
-    omlclient.addmp("tbl2", mp_2.retSchema(1));
+    omlclient.addmp("tbl1", mp_1); 
+    omlclient.addmp("tbl2", mp_2);
 
 
 
-When you have set up all your measurement points, call start():
+When you set up all your measurement points, call start():
 
     omlclient.start();
 
@@ -70,11 +74,11 @@ For presentation purposes we will create a few hardcoded measurement tuples:
     String[] data = { "1", "Ioannis", "Igoumenos" };
     String [] data2 = { "3", "5"};
 
-Since you have measurement points ready to send to OML, use the inject function as follows:
+Since you have measurement points ready to send to OML, use the inject function of the OmlMP object as follows:
 
 
-    omlclient.inject("tbl1", data);
-    omlclient.inject("tbl2", data2);
+    mp_1.inject(data);
+    mp_2.inject(data2);
 
 
 At the end of your program, call close to gracefully close the database:
