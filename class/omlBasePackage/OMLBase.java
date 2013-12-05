@@ -324,13 +324,8 @@ public class OMLBase {
 	private synchronized void create_head(){
 		// Take current time
 		head_time = System.currentTimeMillis();
-<<<<<<< HEAD
-		int lcl_head_time = (int)(head_time/1000L);
-		String time = String.valueOf(lcl_head_time);
-=======
 		double lcl_head_time = head_time/1000.0;
 		String time = Double.toString(lcl_head_time);
->>>>>>> Abstraction extended
 		 
 		header.append("protocol: 1\n");
 		header.append("experiment-id: " + oml_exp_id + "\n");
