@@ -540,21 +540,24 @@ public class OMLBase {
  
 		try {
 			// The address to connect to
-			System.out.println(TAG + ":Address:" + getAddress());
-			System.out.println(TAG + ":Port:" + String.valueOf(getPort()));
+			//System.out.println(TAG + ":Address:" + getAddress());
+			//System.out.println(TAG + ":Port:" + String.valueOf(getPort()));
 			addr = InetAddress.getByName(getAddress());
-			// The address plus the port
-			servAddress = new InetSocketAddress(addr, getPort());
+            		Log.i("TCP", "C: Connecting...");
 
-			// Try to connect
-			mysock = new Socket();
-			// This socket will block/ try connect for 5s
-			mysock.connect(servAddress, 5000);
-			// Show me if i was connected successfully
+            		
+			mysock = new Socket(addr,getPort());
+			
+			Log.i("TAG","ok!");
+			
 			if (mysock.isConnected()) {
 				if(out == null){
 					out = new PrintWriter(mysock.getOutputStream(),true);
 					System.out.println(TAG + ":New socket and new streamer was created.");
+					Log.i("TAG",":New socket and new streamer was created.");
+				}
+				else{
+					System.out.println(TAG + ":New socket and new streamer was NOT created.");
 				}
 			}
  
